@@ -35,6 +35,14 @@ function scale(p: Point, scaler: number) {
   return new Point(p.x * scaler, p.y * scaler);
 }
 
+function normalize(p: Point) {
+  return scale(p, 1 / magnitude(p));
+}
+
+function magnitude(p: Point) {
+  return Math.hypot(p.x, p.y);
+}
+
 function translate(loc: Point, angle: number, offset: number) {
   return new Point(
     loc.x + Math.cos(angle) * offset,
@@ -59,9 +67,9 @@ function getIntersection(A: Point, B: Point, C: Point, D: Point) {
   const uTop = (C.y - A.y) * (A.x - B.x) - (C.x - A.x) * (A.y - B.y);
   const bottom = (D.y - C.y) * (B.x - A.x) - (D.x - C.x) * (B.y - A.y);
 
-  if (bottom != 0) {
-    const t = tTop / bottom;
-    const u = uTop / bottom;
+  if (roundNumberToDecimalPlace(bottom, 3) !== 0) {
+    const t = roundNumberToDecimalPlace(tTop / bottom, 3); // round number because of JS precision will give something like 0.9999999998 instead of 1.
+    const u = roundNumberToDecimalPlace(uTop / bottom, 3);
     if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
       return {
         x: lerp(A.x, B.x, t),

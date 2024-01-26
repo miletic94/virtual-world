@@ -1,2 +1,2 @@
-run npm start:dev
+nodemon
 open index.html with browser

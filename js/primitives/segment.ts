@@ -20,6 +20,14 @@ class Segment {
     return this.p1.equals(point) || this.p2.equals(point);
   }
 
+  directionVector() {
+    return normalize(subtract(this.p2, this.p1));
+  }
+
+  length() {
+    return distance(this.p1, this.p2);
+  }
+
   draw(
     ctx: CanvasRenderingContext2D,
     { width = 2, color = "black", dash = [] }: SegmentDrawOptions = {}

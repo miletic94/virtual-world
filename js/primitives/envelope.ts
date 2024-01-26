@@ -1,5 +1,3 @@
-type EnvelopeDrawOptions = { fill: string; stroke: string; lineWidth: number };
-
 class Envelope {
   public poly: Polygon;
   constructor(public skeleton: Segment, width = 80, roundness = 1) {
@@ -29,7 +27,7 @@ class Envelope {
     return new Polygon(points);
   }
 
-  draw(ctx: CanvasRenderingContext2D, options: EnvelopeDrawOptions) {
+  draw(ctx: CanvasRenderingContext2D, options: PolygonDrawOptions = {}) {
     this.poly.draw(ctx, options);
   }
 }

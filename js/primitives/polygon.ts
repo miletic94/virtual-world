@@ -1,7 +1,7 @@
 type PolygonDrawOptions = {
-  stroke: string;
+  stroke?: string;
   lineWidth?: number;
-  fill: string;
+  fill?: string;
 };
 
 class Polygon {
@@ -59,8 +59,8 @@ class Polygon {
 
         if (
           intersection &&
-          roundNumberToDecimalPlace(intersection.offset, 2) !== 1 && // round number because of JS precision will give something like 0.9999999998 instead of 1.
-          roundNumberToDecimalPlace(intersection.offset, 2) !== 0
+          intersection.offset !== 1 &&
+          intersection.offset !== 0
         ) {
           const point = new Point(intersection.x, intersection.y);
 
@@ -79,6 +79,24 @@ class Polygon {
   containsSegment(segment: Segment) {
     const midpoint = average(segment.p1, segment.p2);
     return this.containsPoint(midpoint);
+  }
+
+  intersectsPoly(poly: Polygon) {
+    for (let segments1 of this.segments) {
+      for (let segments2 of poly.segments) {
+        if (
+          getIntersection(
+            segments1.p1,
+            segments1.p2,
+            segments2.p1,
+            segments2.p2
+          )
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   containsPoint(point: Point) {
