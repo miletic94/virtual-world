@@ -16,12 +16,16 @@ const world = new World(graph, undefined, 10);
 const viewport = new Viewport(myCanvas);
 const graphEditor = new GraphEditor(viewport, graph);
 
+let oldGraphHash = graph.hash();
 animate();
 function animate() {
   if (!ctx) throw new Error("No ctx");
 
   viewport.reset();
-  world.generate();
+  if (graph.hash() !== oldGraphHash) {
+    world.generate();
+    oldGraphHash = graph.hash();
+  }
   world.draw(ctx);
   ctx.globalAlpha = 0.4;
   graphEditor.display();

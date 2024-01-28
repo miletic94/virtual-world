@@ -6,6 +6,10 @@ class Graph {
     this.segments = segments;
   }
 
+  hash() {
+    return JSON.stringify(this);
+  }
+
   static load(info: GraphInfo): Graph {
     const points = info.points.map((point) => new Point(point.x, point.y));
     const segments = info.segments.map(

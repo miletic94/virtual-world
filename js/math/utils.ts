@@ -82,6 +82,10 @@ function getIntersection(A: Point, B: Point, C: Point, D: Point) {
   return null;
 }
 
+function dot(p1: Point, p2: Point) {
+  return p1.x * p2.x + p1.y * p2.y;
+}
+
 function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
