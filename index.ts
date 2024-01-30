@@ -26,7 +26,8 @@ function animate() {
     world.generate();
     oldGraphHash = graph.hash();
   }
-  world.draw(ctx);
+  const viewPoint = scale(viewport.getOffset(), -1);
+  world.draw(ctx, viewPoint);
   ctx.globalAlpha = 0.4;
   graphEditor.display();
 

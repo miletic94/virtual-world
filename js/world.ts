@@ -15,9 +15,9 @@ class World {
 
   public treeSize: number;
 
-  public buildings: Polygon[];
+  public buildings: Building[];
 
-  public trees: Point[];
+  public trees: Tree[];
 
   constructor(
     graph: Graph,
@@ -50,7 +50,7 @@ class World {
     this.generate();
   }
 
-  #generateBuildings(): Polygon[] {
+  #generateBuildings(): Building[] {
     const tempEnvelopes: Envelope[] = [];
     this.graph.segments.forEach((segment) => {
       tempEnvelopes.push(
@@ -113,7 +113,7 @@ class World {
       }
     }
 
-    return bases;
+    return bases.map((b) => new Building(b));
   }
 
   generate() {
@@ -130,10 +130,10 @@ class World {
     this.trees = this.#generateTrees();
   }
 
-  #generateTrees(): Point[] {
+  #generateTrees(): Tree[] {
     const points = [
       ...this.roadBorders.map((s) => [s.p1, s.p2]).flat(),
-      ...this.buildings.map((b) => b.points).flat(),
+      ...this.buildings.map((b) => b.base.points).flat(),
     ];
 
     const left = Math.min(...points.map((p) => p.x));
@@ -142,13 +142,13 @@ class World {
     const bottom = Math.max(...points.map((p) => p.y));
 
     const illegalPolys = [
-      ...this.buildings,
+      ...this.buildings.map((building) => building.base),
       ...this.envelopes.map((e) => e.poly),
     ];
 
-    const trees = [];
+    const trees: Tree[] = [];
     let tryCount = 0;
-    while (tryCount < 10) {
+    while (tryCount < Math.floor(Math.random() * 80) + 30) {
       const p = new Point(
         lerp(left, right, Math.random()),
         lerp(bottom, top, Math.random())
@@ -170,7 +170,7 @@ class World {
       // if tree is too close to other trees
       if (keep) {
         trees.forEach((tree) => {
-          if (distance(tree, p) < this.treeSize) {
+          if (distance(tree.center, p) < this.treeSize) {
             keep = false;
             return;
           }
@@ -191,7 +191,7 @@ class World {
       }
 
       if (keep) {
-        trees.push(p);
+        trees.push(new Tree(p, this.treeSize));
         tryCount = 0;
       }
       tryCount++;
@@ -199,7 +199,7 @@ class World {
 
     return trees;
   }
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D, viewPoint: Point) {
     this.envelopes.forEach((envelope) =>
       envelope.draw(ctx, { fill: "#BBB", stroke: "#BBB", lineWidth: 15 })
     );
@@ -209,10 +209,13 @@ class World {
     this.roadBorders.forEach((segment) =>
       segment.draw(ctx, { color: "white", width: 4 })
     );
-    this.buildings.forEach((building) => building.draw(ctx));
 
-    this.trees.forEach((tree) =>
-      tree.draw(ctx, { size: this.treeSize, color: "rgba(0,0,0,0.5)" })
-    );
+    const items = [...this.buildings, ...this.trees];
+    items.sort((a: Tree | Building, b: Tree | Building) => {
+      return (
+        b.base.distanceToPoint(viewPoint) - a.base.distanceToPoint(viewPoint)
+      );
+    });
+    items.forEach((item) => item.draw(ctx, viewPoint));
   }
 }
