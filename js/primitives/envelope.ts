@@ -23,7 +23,6 @@ class Envelope {
     for (let i = alpha_ccw; i < alpha_cw + eps; i += step) {
       points.push(translate(p2, i + Math.PI, radius));
     }
-
     return new Polygon(points);
   }
 

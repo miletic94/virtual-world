@@ -1,4 +1,5 @@
 type Intersection = Point;
+type MarkingType = Stop | Crossing;
 
 class World {
   public envelopes: Envelope[];
@@ -18,6 +19,10 @@ class World {
   public buildings: Building[];
 
   public trees: Tree[];
+
+  public laneGuides: Segment[];
+
+  public markings: MarkingType[];
 
   constructor(
     graph: Graph,
@@ -47,7 +52,22 @@ class World {
 
     this.trees = [];
 
+    this.laneGuides = [];
+
+    this.markings = [];
+
     this.generate();
+  }
+
+  #generateLangGuides() {
+    const tempEnvelopes: Envelope[] = [];
+    this.graph.segments.forEach((segment) => {
+      tempEnvelopes.push(
+        new Envelope(segment, this.roadWidth / 2, this.roadRoundness)
+      );
+    });
+    const segments = Polygon.union(tempEnvelopes.map((e) => e.poly));
+    return segments;
   }
 
   #generateBuildings(): Building[] {
@@ -128,6 +148,9 @@ class World {
     );
     this.buildings = this.#generateBuildings();
     this.trees = this.#generateTrees();
+
+    this.laneGuides.length = 0;
+    this.laneGuides.push(...this.#generateLangGuides());
   }
 
   #generateTrees(): Tree[] {
@@ -203,6 +226,9 @@ class World {
     this.envelopes.forEach((envelope) =>
       envelope.draw(ctx, { fill: "#BBB", stroke: "#BBB", lineWidth: 15 })
     );
+
+    this.markings.forEach((marking) => marking.draw(ctx));
+
     this.graph.segments.forEach((segment) =>
       segment.draw(ctx, { width: 4, color: "white", dash: [10, 10] })
     );
