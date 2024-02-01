@@ -10,6 +10,21 @@ if (!stopBtn) throw new Error(`No element with id stopButton`);
 const crossingBtn = document.getElementById("crossingButton");
 if (!crossingBtn) throw new Error(`No element with id crossingButton`);
 
+const startBtn = document.getElementById("startButton");
+if (!startBtn) throw new Error(`No element with id startButton`);
+
+const yieldBtn = document.getElementById("yieldButton");
+if (!yieldBtn) throw new Error(`No element with id yieldButton`);
+
+const parkingBtn = document.getElementById("parkingButton");
+if (!parkingBtn) throw new Error(`No element with id parkingButton`);
+
+const targetBtn = document.getElementById("targetButton");
+if (!targetBtn) throw new Error(`No element with id targetButton`);
+
+const lightBtn = document.getElementById("lightButton");
+if (!lightBtn) throw new Error(`No element with id lightButton`);
+
 enum GraphMode {
   graph = "graph",
   stop = "stop",
@@ -37,6 +52,17 @@ const tools = {
     button: crossingBtn,
     editor: new CrossingEditor(viewport, world),
   },
+  start: {
+    button: startBtn,
+    editor: new StartEditor(viewport, world),
+  },
+  yield: {
+    button: yieldBtn,
+    editor: new YieldEditor(viewport, world),
+  },
+  parking: { button: parkingBtn, editor: new ParkingEditor(viewport, world) },
+  target: { button: targetBtn, editor: new TargetEditor(viewport, world) },
+  light: { button: lightBtn, editor: new LightEditor(viewport, world) },
 };
 
 let oldGraphHash = graph.hash();

@@ -2,6 +2,7 @@ type SegmentDrawOptions = {
   width?: number;
   color?: string;
   dash?: number[];
+  cap?: CanvasLineCap;
 };
 
 type SegmentInfo = { p1: PointInfo; p2: PointInfo };
@@ -52,11 +53,17 @@ class Segment {
 
   draw(
     ctx: CanvasRenderingContext2D,
-    { width = 2, color = "black", dash = [] }: SegmentDrawOptions = {}
+    {
+      width = 2,
+      color = "black",
+      dash = [],
+      cap = "butt",
+    }: SegmentDrawOptions = {}
   ) {
     ctx.beginPath();
     ctx.lineWidth = width;
     ctx.strokeStyle = color;
+    ctx.lineCap = cap;
     ctx.setLineDash(dash);
     ctx.moveTo(this.p1.x, this.p1.y);
     ctx.lineTo(this.p2.x, this.p2.y);
