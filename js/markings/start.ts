@@ -8,6 +8,7 @@ class Start extends Marking {
   ) {
     super(center, directionVector, width, height);
 
+    this.type = MarkingEnum.START;
     this.img = new Image();
     this.img.src = "car.png";
   }

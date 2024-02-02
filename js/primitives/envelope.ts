@@ -1,8 +1,21 @@
 class Envelope {
-  public poly: Polygon;
-  constructor(public skeleton: Segment, width = 80, roundness = 1) {
-    this.skeleton = skeleton;
-    this.poly = this.#generatePolygon(width, roundness);
+  public poly!: Polygon;
+  public skeleton!: Segment;
+  constructor(skeleton: Segment | null = null, width = 80, roundness = 1) {
+    if (skeleton) {
+      this.skeleton = skeleton;
+      this.poly = this.#generatePolygon(width, roundness);
+    }
+  }
+
+  static load(info: Envelope) {
+    const env = new Envelope();
+    env.skeleton = new Segment(
+      new Point(info.skeleton.p1.x, info.skeleton.p1.y),
+      new Point(info.skeleton.p2.x, info.skeleton.p2.y)
+    );
+    env.poly = Polygon.load(info.poly);
+    return env;
   }
 
   #generatePolygon(width: number, roundness: number) {

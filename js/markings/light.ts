@@ -16,6 +16,7 @@ class Light extends Marking {
   ) {
     super(center, directionVector, width, 18);
 
+    this.type = MarkingEnum.LIGHT;
     this.state = LightState.green;
     this.border = this.poly.segments[0];
   }

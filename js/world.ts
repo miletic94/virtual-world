@@ -1,5 +1,33 @@
+type WorldInfo = {
+  graph: Graph;
+  roadWidth: number;
+  roadRoundness: number;
+  buildingWidth: number;
+  buildingMinLength: number;
+  spacing: number;
+  treeSize: number;
+  envelopes: Envelope[];
+  skeleton: Segment;
+  poly: Polygon;
+  roadBorders: Segment[];
+  buildings: Building[];
+  trees: Tree[];
+  laneGuides: Segment[];
+  markings: Marking[];
+  zoom: number;
+  offset: Point;
+};
 type Intersection = Point;
 type MarkingType = Stop | Crossing | Start | Yield | Parking | Target | Light;
+enum MarkingEnum {
+  STOP = "stop",
+  CROSSING = "crossing",
+  START = "start",
+  YIELD = "yield",
+  PARKING = "parking",
+  TARGET = "target",
+  LIGHT = "light",
+}
 
 class World {
   public envelopes: Envelope[];
@@ -26,6 +54,9 @@ class World {
 
   public frameCount: number;
 
+  public zoom: number;
+  public offset: Point;
+
   constructor(
     graph: Graph,
     roadWidth = 100,
@@ -38,17 +69,15 @@ class World {
     this.graph = graph;
     this.roadWidth = roadWidth;
     this.roadRoundness = roadRoundness;
+    this.buildingWidth = buildingWidth;
+    this.buildingMinLength = buildingMinLength;
+    this.spacing = spacing;
+    this.treeSize = treeSize;
 
     this.intersections = [];
 
     this.envelopes = [];
     this.roadBorders = [];
-
-    this.buildingWidth = buildingWidth;
-    this.buildingMinLength = buildingMinLength;
-    this.spacing = spacing;
-
-    this.treeSize = treeSize;
 
     this.buildings = [];
 
@@ -60,7 +89,33 @@ class World {
 
     this.frameCount = 0;
 
+    (this.zoom = 1), (this.offset = new Point(0, 0));
+
     this.generate();
+  }
+
+  static load(info: WorldInfo) {
+    const world = new World(new Graph());
+    world.graph = Graph.load(info.graph);
+    world.roadWidth = info.roadWidth;
+    world.roadRoundness = info.roadRoundness;
+    world.buildingWidth = info.buildingWidth;
+    world.buildingMinLength = info.buildingMinLength;
+    world.spacing = info.spacing;
+    world.treeSize = info.treeSize;
+    world.envelopes = info.envelopes.map((e) => Envelope.load(e));
+    world.roadBorders = info.roadBorders.map(
+      (b) => new Segment(new Point(b.p1.x, b.p1.y), new Point(b.p2.x, b.p2.y))
+    );
+    world.buildings = info.buildings.map((b) => Building.load(b));
+    world.trees = info.trees.map((t) => new Tree(t.center, info.treeSize));
+    world.laneGuides = info.laneGuides.map(
+      (g) => new Segment(new Point(g.p1.x, g.p1.y), new Point(g.p2.x, g.p2.y))
+    );
+    world.markings = info.markings.map((m) => Marking.load(m));
+    world.zoom = info.zoom;
+    world.offset = info.offset;
+    return world;
   }
 
   #generateLangGuides() {

@@ -37,13 +37,14 @@ myCanvas.height = 600;
 const ctx = myCanvas.getContext("2d");
 if (!ctx) throw new Error("No ctx");
 
-const graphString = localStorage.getItem("graph");
-const graphInfo: GraphInfo = graphString ? JSON.parse(graphString) : null;
+const worldString = localStorage.getItem("world");
+const worldInfo = worldString ? JSON.parse(worldString) : null;
 
-const graph = graphInfo ? Graph.load(graphInfo) : new Graph();
-const world = new World(graph, undefined, 10);
+let world = worldInfo ? World.load(worldInfo) : new World(new Graph());
 
-const viewport = new Viewport(myCanvas);
+const graph = world.graph;
+
+const viewport = new Viewport(myCanvas, world.zoom, world.offset);
 
 const tools = {
   graph: { button: graphBtn, editor: new GraphEditor(viewport, graph) },
@@ -94,7 +95,48 @@ function dispose() {
 }
 
 function save() {
-  localStorage.setItem("graph", JSON.stringify(graph));
+  world.zoom = viewport.zoom;
+  world.offset = viewport.offset;
+
+  const element = document.createElement("a");
+  element.setAttribute(
+    "href",
+    "data:application/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(world))
+  );
+
+  const fileName = "name.world";
+  element.setAttribute("download", fileName);
+
+  element.click();
+
+  localStorage.setItem("world", JSON.stringify(world));
+}
+
+function load(event: Event) {
+  const files = (event.target as HTMLInputElement).files;
+  let file: File | null = null;
+
+  if (files !== null) file = files[0];
+
+  if (!file) {
+    alert("No file selected");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.readAsText(file);
+  reader.onload = (evt: Event) => {
+    const fileContent = (evt.target as FileReader).result as string;
+    if (!fileContent) {
+      alert("File content could not be parsed");
+      return;
+    }
+    const jsonData = JSON.parse(fileContent);
+    world = World.load(jsonData);
+    localStorage.setItem("world", JSON.stringify(world));
+    location.reload();
+  };
 }
 
 function setMode(mode: GraphMode) {

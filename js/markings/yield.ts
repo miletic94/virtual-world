@@ -8,6 +8,7 @@ class Yield extends Marking {
   ) {
     super(center, directionVector, width, height);
 
+    this.type = MarkingEnum.YIELD;
     this.border = this.poly.segments[2];
   }
 

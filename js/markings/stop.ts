@@ -8,6 +8,7 @@ class Stop extends Marking {
   ) {
     super(center, directionVector, width, height);
 
+    this.type = MarkingEnum.STOP;
     this.border = this.poly.segments[2];
   }
 

@@ -13,6 +13,15 @@
     <div id="controls">
         <button onclick="dispose()">🗑️</button>
         <button onclick="save()">💾</button>
+        <label for="fileInput" class="file-input-label">
+            📂
+            <input 
+                type="file"
+                id="fileInput"
+                accept=".world"
+                onchange="load(event)"
+            />
+        </label>
         &nbsp;
         <button id="graphButton" onclick="setMode('graph')">🌐</button>
         <button id="stopButton" onclick="setMode('stop')">🛑</button>

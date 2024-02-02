@@ -6,6 +6,10 @@ class Building {
     this.heightCoefficient = heightCoefficient;
   }
 
+  static load(info: Building) {
+    return new Building(Polygon.load(info.base), info.heightCoefficient);
+  }
+
   draw(ctx: CanvasRenderingContext2D, viewPoint: Point) {
     const topPoints = this.base.points.map((p) =>
       add(p, scale(subtract(p, viewPoint), this.heightCoefficient))

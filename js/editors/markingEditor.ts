@@ -29,10 +29,8 @@ abstract class MarkingEditor {
   }
 
   disable() {
-    console.log("disabling");
     this.#removeEventListeners();
     this.intent = null;
-    console.log({ intent: this.intent });
   }
 
   #addEventListeners() {

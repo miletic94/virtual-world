@@ -8,6 +8,7 @@ class Crossing extends Marking {
   ) {
     super(center, directionVector, width, height);
 
+    this.type = MarkingEnum.CROSSING;
     this.borders = [this.poly.segments[0], this.poly.segments[2]];
   }
 

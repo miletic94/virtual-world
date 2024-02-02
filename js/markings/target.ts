@@ -6,6 +6,8 @@ class Target extends Marking {
     height: number
   ) {
     super(center, directionVector, width, height);
+
+    this.type = MarkingEnum.TARGET;
   }
 
   draw(ctx: CanvasRenderingContext2D) {
