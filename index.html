@@ -22,6 +22,7 @@
                 onchange="load(event)"
             />
         </label>
+        <button onclick="openOsmPanel()">🗺️</button>
         &nbsp;
         <button id="graphButton" onclick="setMode('graph')">🌐</button>
         <button id="stopButton" onclick="setMode('stop')">🛑</button>
@@ -32,6 +33,14 @@
         <button id="parkingButton" onclick="setMode('parking')">🅿️</button>
         <button id="targetButton" onclick="setMode('target')">🎯</button>
         <button id="lightButton" onclick="setMode('light')">🚥</button>
+
+        <div id="osmPanel" style="display:none;">
+            <textarea id="osmDataContainer" rows="10" cols="50" placeholder="Paste OSM data here"></textarea>
+            <div>
+                <button onclick="parseOsmData()">✔️</button>
+                <button onclick="closeOsmPanel()">❌</button>
+            </div>
+        </div>
     </div>
 
     <script src="js/math/graph.js"></script>
@@ -69,7 +78,5 @@
     <script src="js/primitives/envelope.js"></script>
 
     <script src="index.js"></script>
-
-    </script>
 </body>
 </html>

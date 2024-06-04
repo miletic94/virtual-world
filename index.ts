@@ -25,6 +25,9 @@ if (!targetBtn) throw new Error(`No element with id targetButton`);
 const lightBtn = document.getElementById("lightButton");
 if (!lightBtn) throw new Error(`No element with id lightButton`);
 
+const osmPanel = document.getElementById("osmPanel");
+if (!osmPanel) throw new Error(`No element with id osmPanel`);
+
 enum GraphMode {
   graph = "graph",
   stop = "stop",
@@ -154,4 +157,12 @@ function disableEditors() {
     tool.button.style.filter = "grayscale(100%)";
     tool.editor.disable();
   }
+}
+
+function openOsmPanel() {
+  osmPanel!.style.display = "block";
+}
+
+function closeOsmPanel() {
+  osmPanel!.style.display = "none";
 }
