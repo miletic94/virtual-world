@@ -115,6 +115,14 @@ function lerp2D(A: Point, B: Point, t: number) {
   return new Point(lerp(A.x, B.x, t), lerp(A.y, B.y, t));
 }
 
+function invLerp(a: number, b: number, v: number) {
+  return (v - a) / (b - a);
+}
+
+function degToRad(degree: number) {
+  return (degree * Math.PI) / 180;
+}
+
 function getRandomColor() {
   const hue = 290 + Math.random() * 260;
   return "hsl(" + hue + ", 100%, 60%)";

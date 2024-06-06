@@ -9,9 +9,10 @@ type PointDrawOptions = {
 type PointInfo = { x: number; y: number };
 
 class Point {
-  constructor(public x: number, public y: number) {
+  constructor(public x: number, public y: number, public id = null) {
     this.x = x;
     this.y = y;
+    this.id = id;
   }
 
   draw(

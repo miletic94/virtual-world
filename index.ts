@@ -28,6 +28,11 @@ if (!lightBtn) throw new Error(`No element with id lightButton`);
 const osmPanel = document.getElementById("osmPanel");
 if (!osmPanel) throw new Error(`No element with id osmPanel`);
 
+const osmDataContainer = document.getElementById(
+  "osmDataContainer"
+) as HTMLTextAreaElement | null;
+if (!osmDataContainer) throw new Error(`No element with id osmDataContainer`);
+
 enum GraphMode {
   graph = "graph",
   stop = "stop",
@@ -165,4 +170,16 @@ function openOsmPanel() {
 
 function closeOsmPanel() {
   osmPanel!.style.display = "none";
+}
+
+function parseOsmData() {
+  if (osmDataContainer!.value == "") {
+    alert("Paste data first.");
+    return;
+  }
+
+  const res = Osm.parseRoads(JSON.parse(osmDataContainer!.value));
+  graph.points = res.points;
+  graph.segments = res.segments;
+  closeOsmPanel();
 }
